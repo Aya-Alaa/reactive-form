@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  FormBuilder
+} from '@angular/forms';
+import { UsersService } from 'src/app/services/users.service';
 
 @Component({
   selector: 'app-my-form',
@@ -19,11 +25,23 @@ export class MyFormComponent implements OnInit {
     gender: new FormControl('')
   });
 
-  constructor() {}
+  constructor(private fb: FormBuilder, private usersService: UsersService) {}
 
-  ngOnInit(): void {}
+  initForm() {
+    this.userInfo = this.fb.group({
+      email: ['', Validators.required]
+    });
+  }
+  ngOnInit(): void {
+    // here we can call inintForm()
+  }
   //
   onSubmit() {
-    console.log(this.userInfo.value);
+    if (this.userInfo.valid) {
+      this.userInfo.value.name = 'any name';
+      console.log(this.userInfo.value);
+      this.usersService.users.push(this.userInfo.value);
+      console.warn(this.usersService.users);
+    }
   }
 }
